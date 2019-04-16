@@ -9,6 +9,8 @@ package.path = package.path .. ';' .. gfs.get_configuration_dir() .. '/lib/?/ini
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
+awful.rules         = require("awful.rules")
+local tyrannical = require("lib.tyrannical")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
@@ -96,7 +98,7 @@ awful.rules.rules = {
         roperties = {titlebars_enabled = false}
     },
 }
-screen.init_tyrannical()
+tyrannical = screen.init_tyrannical(tyrannical)
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 -- awful.screen.connect_signal("property::geometry", utils.set_wallpaper)
@@ -108,6 +110,7 @@ end)
 
 -- Root configuration
 root.keys(keyboard.globalkeys)
+root.buttons(mouse.globalbuttons)
 
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function (c)

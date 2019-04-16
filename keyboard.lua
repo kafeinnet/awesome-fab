@@ -19,8 +19,9 @@ local globalkeys = awful.util.table.join(
     awful.key({modkey,                   }, "w"             , function () awful.util.mymainmenu:show() end, {description = "show main menu", group = "awesome"}),
     awful.key({modkey                    }, "r"             , function () awful.screen.focused().mypromptbox.launch() end, {description = "run prompt", group = "launcher"}),
     awful.key({modkey, "Control"         }, "r"             , awesome.restart, {description = "reload awesome", group = "awesome"}),
-    awful.key({modkey,            "Shift"}, "q"             , awesome.quit, {description = "quit awesome", group = "awesome"}),
-    awful.key({modkey                    }, "d"             , xrandr.switch, {description = "screen selector", group="screen"}),
+    awful.key({modkey,                   }, "q"             , awesome.quit, {description = "quit awesome", group = "awesome"}),
+    awful.key({modkey,            "Shift"}, "d"             , xrandr.switch, {description = "screen selector", group="screen"}),
+    awful.key({modkey                    }, "d"             , function () awful.util.spawn("autorandr -c") end, {description = "detect screen layout", group="screen"}),
     awful.key({modkey                    }, "l"             , function () awful.util.spawn("light-locker-command -l") end, {description = "lock screen", group="screen"}),
 
     -- Programs
@@ -89,7 +90,8 @@ end
 
 -- Keys available when a client is focused
 clientkeys = awful.util.table.join(
-    awful.key({altkey,            "Shift"}, "m"             , lain.util.magnify_client),
+    awful.key({modkey,            "Shift"}, "f"             , lain.util.magnify_client, {description = "toggle floating", group = "client"}),
+    awful.key({modkey,                   }, "m"             , function (c) c.maximized = not c.maximized; c:raise() end , {description = "maximize", group = "client"}),
     awful.key({modkey,                   }, "f"             , function (c) c.fullscreen = not c.fullscreen; c:raise() end, {description = "toggle fullscreen", group = "client"}),
     awful.key({modkey,                   }, "x"             , function (c) c:kill() end, {description = "close", group = "client"})
 )

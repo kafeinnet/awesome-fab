@@ -1,6 +1,8 @@
 local gears = require("gears")
 local awful = require("awful")
+local config = require("config")
 
+modkey = config.modkey
 
 -- Mouse bindings on tags
 local taglist_buttons = awful.util.table.join(
@@ -21,7 +23,7 @@ local taglist_buttons = awful.util.table.join(
 )
 
 -- Mouse bindings on tasks list
-tasklist_buttons = awful.util.table.join(
+local tasklist_buttons = awful.util.table.join(
     awful.button({ }, 1, function (c)
         if c == client.focus then
             c.minimized = true
@@ -59,13 +61,21 @@ tasklist_buttons = awful.util.table.join(
 )
 
 -- Mouse bindings on the X11 root
-root.buttons(awful.util.table.join(
+local globalbuttons = awful.util.table.join(
     awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
-))
+)
+
+local clientbuttons = awful.util.table.join(
+    awful.button({ }, 1, function (c) client.focus = c; c:raise() end),
+    awful.button({modkey}, 1, awful.mouse.client.move),
+    awful.button({modkey}, 3, awful.mouse.client.resize)
+)
 
 return {
     taglist_buttons=taglist_buttons,
-    tasklist_buttons=tasklist_buttons
+    tasklist_buttons=tasklist_buttons,
+    globalbuttons = globalbuttons,
+    clientbuttons = clientbuttons
 }

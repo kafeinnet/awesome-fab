@@ -1,3 +1,4 @@
+local gears = require("gears")
 local theme_assets = require("beautiful.theme_assets")
 local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
@@ -54,5 +55,9 @@ theme.widget_yellow = "#c0ca33"
 theme.widget_green = "#43a047"
 theme.widget_black = "#000000"
 theme.widget_transparent = "#00000000"
+theme.progressbar_bg = theme.bg_focus
+theme.progressbar_fg = theme.fg_normal
+theme.progressbar_shape = gears.shape.rectangle
+theme.progressbar_margins = {left=4, right=4, bottom=2, top=2}
 
 return theme

@@ -5,8 +5,6 @@
 -- System libraries
 local gears = require("gears")
 local awful = require("awful")
-awful.rules = require("awful.rules")
-local tyrannical = require("lib.tyrannical")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local lain = require("lain")
@@ -28,37 +26,13 @@ local spr = wibox.widget.separator {
 }
 
 -- Battery
-local battery_widget = lain.widget.bat({
-    settings = function()
-        if bat_now.status ~= "N/A" then
-            if bat_now.ac_status == 1 then
-                widget:set_markup(lain.util.markup.font(beautiful.font, " AC "))
-            else
-                widget:set_markup(lain.util.markup.font(beautiful.font, " " .. bat_now.perc .. "% "))
-            end
-        else
-            widget:set_markup(lain.util.markup.font(beautiful.font, " AC "))
-        end
-        widget.align = "center"
-    end
-}).widget
+local battery_widget = require("fab.widgets.batt")
 
 -- Mem
-local mem_widget = lain.widget.mem({
-    settings = function()
-        mem_used = math.floor(mem_now.used / 1024)
-        widget:set_markup(lain.util.markup.font(beautiful.font, " " .. mem_used .. "GB "))
-        widget.align = "center"
-    end
-}).widget
+local mem_widget = require("fab.widgets.mem")
 
 -- CPU
-local cpu_widget = lain.widget.cpu({
-    settings = function()
-        widget:set_markup(lain.util.markup.font(beautiful.font, " " .. cpu_now.usage .. "% "))
-        widget.align = "center"
-    end
-}).widget
+local cpu_widget = require("fab.widgets.cpu")
 
 -- Temp
 local temp_widget = lain.widget.temp({
@@ -167,18 +141,16 @@ local function at_screen_connect(s)
             spr,
             clock_widget,
             spr,
+            cpu_widget,
+            mem_widget,
+            battery_widget,
+            spr,
             s.mytaglist,
             spr,
         },
         s.mytasklist, -- Middle widget
         { -- Bottom widgets
             layout = wibox.layout.fixed.vertical,
-            spr,
-            cpu_widget,
-            spr,
-            mem_widget,
-            spr,
-            battery_widget,
             spr,
             s.mysystray,
             spr,
@@ -187,7 +159,7 @@ local function at_screen_connect(s)
     }
 end
 
-local init_tyrannical = function()
+local init_tyrannical = function(tyrannical)
     -- Dynamic tags management
     tyrannical.tags = {
         {
@@ -206,17 +178,18 @@ local init_tyrannical = function()
             exclusive   = true,
             force_screen = true,
             --icon        = "~net.png",                 -- Use this icon for the tag (uncomment with a real path)
-            screen      = screen.count()>1 and 2 or 1,-- Setup on screen 2 if there is more than 1 screen, else on screen 1
+            screen      = screen.count()>1 and 3 or 1,-- Setup on screen 2 if there is more than 1 screen, else on screen 1
                 layout      = awful.layout.suit.max,      -- Use the max layout
-                exec_once   = { "firefox" },
-                class       = { "Firefox" }
+                -- exec_once   = { "firefox" },
+                class       = { "Navigator", "Firefox" }
         },
         {
             name        = "",
-            init        = true,
+            init        = false,
             exclusive   = true,
             force_screen = true,
-            screen      = screen.count()>1 and 3 or 1,
+            volatile    = true,
+            screen      = screen.count()>1 and 2 or 1,
             layout      = awful.layout.suit.max                          ,
             class       = { "code-oss" }
         },
@@ -233,25 +206,25 @@ local init_tyrannical = function()
         },
         {
             name        = "",
-            init        = true,
+            init        = false,
             exclusive   = true,
             -- force_screen = true,
             volatile    = true,
             screen      = 1,
             layout      = awful.layout.suit.max,
-            exec_once   = { "rocketchat-desktop" }, --When the tag is accessed for the first time, execute this command
+            -- exec_once   = { "rocketchat-desktop" }, --When the tag is accessed for the first time, execute this command
             class       = { "Rocket.Chat" }
         },
         {
             name        = "",
-            init        = true,
+            init        = false,
             exclusive   = true,
             -- force_screen = true,
             volatile    = true,
             screen      = 1,
             layout      = awful.layout.suit.max,
-            exec_once   = { "spotify" }, --When the tag is accessed for the first time, execute this command
-            class       = { "Spotify" }
+            -- exec_once   = { "spotify" }, --When the tag is accessed for the first time, execute this command
+            class       = { "Spotify", "spotify" }
         },
     }
 
